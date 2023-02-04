@@ -20,11 +20,8 @@ public class SOM {
 		neurony=new Vec2D[h][];
 		for(int i=0;i<h;i++)
 			neurony[i]=new Vec2D[w];
-		Random r=new Random();
 		for(int i=0;i<neurony.length;i++)
 			for(int j=0;j<neurony[i].length;j++){
-//				double a=0.01*(r.nextDouble()-0.5)/0.5;
-//				double b=0.01*(r.nextDouble()-0.5)/0.5;
 				double angle = rand.nextDouble() * 2 * Math.PI;
 				double a = ((w/2-(w/16) - (w/8)/2 * Math.cos(angle))*0.01);
 				double b = ((h/4+h/8 + (w/8)/2 * Math.sin(angle))*0.01);

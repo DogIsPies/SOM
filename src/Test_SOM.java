@@ -1,7 +1,4 @@
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Graphics;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
@@ -15,13 +12,10 @@ public class Test_SOM extends JFrame {
 	private SOM som;
 	private Timer timer;
 
-
-	public double ETA = 0.999;
-	public double AETA = 0.1;
 	public boolean changeShape = true;
 	double x;
 	double y;
-	Vec2D wejscia;
+
 
 	class MyComponent extends JComponent{
 
@@ -29,7 +23,7 @@ public class Test_SOM extends JFrame {
 		protected void paintComponent(Graphics g) {
 			int w=getWidth();
 			int h=getHeight();
-//			g.drawRect(w/4, h/4, w/2, h/2);
+
 			//kwadrat nr1
 			g.drawRect(w/8, h/4, w/4, h/2);
 			//kwadrat w kwadracie
@@ -40,33 +34,37 @@ public class Test_SOM extends JFrame {
 			g.drawRect(w/2+(w/4)/2, h/4, w/4, h/2);
 			//kółko w kwadracie
 			g.drawOval((w/2+(w/4)/2)+w/16, h/4+h/8, w/8, h/4);
-//			g.drawRect((w/2+(w/4)/2)+w/16, h/4+h/8, w/8, h/4);
-			g.drawRoundRect((w/2+(w/4)/2)+w/16, h/4+h/8, w/8, h/4, 60, 60);
-
-			g.drawRect(w/2-(w/16), h/4+h/8, w/8, h/4);
-
-			som.draw(g, w/2-(w/16), h/4+h/8, w/8, h/4);
 
 
-			int x0 = w/2-(w/16);
-			int y0 = h/4+h/8;
-			int r = (w/8)/2;
+
+
+
+
+			int r = (w/16);
 			Random rand=new Random();
-			if(changeShape){
+			if(som.eta > 0.1){
+				som.draw(g, w/2-(w/16), h/4+h/8, w/8, h/4);
 				double a = ((rand.nextDouble() - 0.5) / 0.5);
 				double b = ((rand.nextDouble() - 0.5) / 0.5);
 				Vec2D wejsciaKwadrat = new Vec2D(a, b);
 				som.ucz(wejsciaKwadrat);
+				System.out.println(som.eta);
+
+
 			}
 			else{
-			for (int i = 0; i < 10; i++) {
-					double angle = rand.nextDouble() * 2 * Math.PI;
-					x = ((x0 + r * Math.cos(angle)))*0.003;
-					y = ((y0 + r * Math.sin(angle)))*0.003;
-					System.out.println("(" + x + ", " + y + ")");
-				}
-			Vec2D wejsciaKolo=new Vec2D(x,y);
-			som.uczKolo(wejsciaKolo);
+				for (int i = 0; i < 100; i++) {
+						som.draw(g, w/2-(w/16), h/4+h/8, w/8, w/8);
+						double angle = rand.nextDouble() * 2 * Math.PI;
+						x = ((r * Math.cos(angle))*0.017);
+						y = ((r * Math.sin(angle))*0.017);
+
+						System.out.println(som.eta);
+					}
+				Vec2D wejsciaKolo=new Vec2D(x,y);
+				som.uczKolo(wejsciaKolo);
+
+
 			}
 
 			
@@ -85,26 +83,15 @@ public class Test_SOM extends JFrame {
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				som=new SOM(10,10,0.5,0.998,0.997);
+				som=new SOM(10,10,0.3,0.998,0.998);
 			}
 		});
-		JButton change = new JButton("Change");
-		change.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(changeShape){
-					changeShape = false;
-				}
-				else{
-					changeShape = true;
-				}
-
-			}
-		});
+		int x = getWidth();
 		paneldown.setLayout(new BoxLayout(paneldown, BoxLayout.Y_AXIS));
 		paneldown.add(komponent=new MyComponent());
 		paneldown.add(start);
-		paneldown.add(change);
+		start.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 
 		add(paneldown);
 
